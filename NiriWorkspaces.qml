@@ -3,9 +3,10 @@ import QtQuick
 
 Rectangle {
     id: root
-    color: "transparent"
+    color: "#000000"
     width: workspaceRow.width
-    height: 32
+    height: 34
+    radius: 8
 
     property var workspaces: []
     property alias spacing: workspaceRow.spacing
@@ -59,6 +60,7 @@ Rectangle {
     Row {
         id: workspaceRow
         spacing: 8
+        padding: 6
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
