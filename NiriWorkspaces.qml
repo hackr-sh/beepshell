@@ -65,7 +65,18 @@ Rectangle {
 
         Repeater {
             id: workspaceRepeater
-            model: root.workspaces
+            model: {
+                // Sort workspaces by their index to maintain consistent order (1, 2, 3, 4...)
+                if (!root.workspaces) return []
+                
+                var sortedWorkspaces = root.workspaces.slice() // Create a copy
+                sortedWorkspaces.sort(function(a, b) {
+                    var aIdx = a.idx !== undefined ? a.idx : (a.id !== undefined ? a.id : 999)
+                    var bIdx = b.idx !== undefined ? b.idx : (b.id !== undefined ? b.id : 999)
+                    return aIdx - bIdx
+                })
+                return sortedWorkspaces
+            }
 
             Rectangle {
                 property bool isFocused: modelData.is_focused || false
