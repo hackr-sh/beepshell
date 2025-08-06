@@ -123,9 +123,9 @@ Rectangle {
                     anchors.centerIn: parent
                     text: modelData.name || modelData.idx || "?"
                     color: {
-                        if (parent.isFocused) return "#000000"
-                        if (parent.isUrgent) return "#ffffff"
-                        return "#ffffff"
+                        if (parent.isFocused) return "#FFFFFF"
+                        if (parent.isUrgent) return "#FFFFFF"
+                        return "#808080"
                     }
                     font.pixelSize: 12
                     font.bold: parent.isFocused || parent.isUrgent
