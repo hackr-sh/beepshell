@@ -295,42 +295,42 @@ Row {
         }
       }
 
-      // Tooltip
-      Rectangle {
-        visible: parent.hovered && (modelData.tooltip || modelData.tooltipTitle)
-        anchors.bottom: parent.top
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottomMargin: 8
-        width: tooltipText.width + 16
-        height: tooltipText.height + 8
-        color: "#2a2a2a"
-        border.color: "#555555"
-        border.width: 1
-        radius: 4
-        z: 100
+      // // Tooltip
+      // Rectangle {
+      //   visible: parent.hovered && (modelData.tooltip || modelData.tooltipTitle)
+      //   anchors.bottom: parent.top
+      //   anchors.horizontalCenter: parent.horizontalCenter
+      //   anchors.bottomMargin: 8
+      //   width: tooltipText.width + 16
+      //   height: tooltipText.height + 8
+      //   color: "#2a2a2a"
+      //   border.color: "#555555"
+      //   border.width: 1
+      //   radius: 4
+      //   z: 100
 
-        Text {
-          id: tooltipText
-          anchors.centerIn: parent
-          text: modelData.tooltip || modelData.tooltipTitle || modelData.title || ""
-          color: "white"
-          font.pixelSize: 11
-        }
+      //   Text {
+      //     id: tooltipText
+      //     anchors.centerIn: parent
+      //     text: modelData.tooltip || modelData.tooltipTitle || modelData.title || ""
+      //     color: "white"
+      //     font.pixelSize: 11
+      //   }
 
-        // Tooltip pointer
-        Rectangle {
-          anchors.top: parent.bottom
-          anchors.horizontalCenter: parent.horizontalCenter
-          anchors.topMargin: -1
-          width: 8
-          height: 8
-          color: parent.color
-          border.color: parent.border.color
-          border.width: 1
-          rotation: 45
-          z: -1
-        }
-      }
+      //   // Tooltip pointer
+      //   Rectangle {
+      //     anchors.top: parent.bottom
+      //     anchors.horizontalCenter: parent.horizontalCenter
+      //     anchors.topMargin: -1
+      //     width: 8
+      //     height: 8
+      //     color: parent.color
+      //     border.color: parent.border.color
+      //     border.width: 1
+      //     rotation: 45
+      //     z: -1
+      //   }
+      // }
     }
   }
 }
