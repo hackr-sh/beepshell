@@ -16,13 +16,13 @@ Scope {
         right: true
       }
 
-      height: 42
+      height: 52
       color: "transparent"
 
       NiriWorkspaces {
         id: workspaces
         anchors.left: parent.left
-        anchors.leftMargin: 24
+        anchors.leftMargin: 12
         anchors.verticalCenter: parent.verticalCenter
         spacing: 6
       }
@@ -33,6 +33,9 @@ Scope {
       }
 
       Tray {
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        anchors.verticalCenter: parent.verticalCenter
       }
     }
   }
