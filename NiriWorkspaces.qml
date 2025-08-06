@@ -138,7 +138,7 @@ Rectangle {
 
                 Behavior on color {
                     ColorAnimation {
-                        duration: 2000
+                        duration: 150
                         easing.type: Easing.OutCubic
                     }
                 }
