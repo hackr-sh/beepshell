@@ -48,7 +48,7 @@ Row {
       // Hover effect
       Rectangle {
         anchors.fill: parent
-        color: parent.hovered ? '#003c3c' : "transparent"
+        color: parent.hovered ? '#003c3c' : "#00003c3c"
         radius: parent.radius
         
         Behavior on color {
