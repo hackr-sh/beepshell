@@ -88,22 +88,13 @@ Rectangle {
                 height: 24
                 radius: 6
 
-                // Dynamic colors based on state
-                color: {
-                    if (isFocused) return "#7fc8ff"
-                    if (isActive) return "#4a90e2"
-                    if (isUrgent) return "#ff6b6b"
-                    if (hasWindows) return "#333333"
-                    return "#1a1a1a"
-                }
-
                 border.width: 2
                 border.color: {
-                    if (isFocused) return "#bbddff"
-                    if (isActive) return "#6bb6ff"
-                    if (isUrgent) return "#ff8e8e"
-                    if (hasWindows) return "#555555"
-                    return "#2a2a2a"
+                    if (isFocused) return "#003c3c"
+                    if (isActive) return "#003c3c"
+                    if (isUrgent) return '#3c0000'
+                    if (hasWindows) return "#001a1a"
+                    return "#000000"
                 }
 
                 // Subtle gradient effect
