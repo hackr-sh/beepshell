@@ -1,4 +1,5 @@
 import QtQuick
+import "./Time.qml"
 
 Rectangle {
   color: "#44000000"
