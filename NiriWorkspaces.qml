@@ -3,7 +3,7 @@ import QtQuick
 
 Rectangle {
     id: root
-    color: "#000000"
+    color: "#44000000"
     width: workspaceRow.width
     height: 34
     radius: 8
