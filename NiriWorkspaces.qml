@@ -16,7 +16,7 @@ Rectangle {
         id: niriProcess
         command: ["niri", "msg", "-j", "workspaces"]
         running: false  // Set to false initially, controlled by timer
-        
+
         stdout: StdioCollector {
             onStreamFinished: {
                 try {
@@ -41,7 +41,7 @@ Rectangle {
         interval: 25  // Refresh every 25ms for better responsiveness
         running: true
         repeat: true
-        
+
         onTriggered: {
             niriProcess.running = true;
         }
@@ -67,18 +67,20 @@ Rectangle {
             id: workspaceRepeater
             model: {
                 // Sort workspaces by their index to maintain consistent order (1, 2, 3, 4...)
-                if (!root.workspaces) return []
-                
-                var sortedWorkspaces = root.workspaces.slice() // Create a copy
-                sortedWorkspaces.sort(function(a, b) {
-                    var aIdx = a.idx !== undefined ? a.idx : (a.id !== undefined ? a.id : 999)
-                    var bIdx = b.idx !== undefined ? b.idx : (b.id !== undefined ? b.id : 999)
-                    return aIdx - bIdx
-                })
-                return sortedWorkspaces
+                if (!root.workspaces)
+                    return [];
+
+                var sortedWorkspaces = root.workspaces.slice(); // Create a copy
+                sortedWorkspaces.sort(function (a, b) {
+                    var aIdx = a.idx !== undefined ? a.idx : (a.id !== undefined ? a.id : 999);
+                    var bIdx = b.idx !== undefined ? b.idx : (b.id !== undefined ? b.id : 999);
+                    return aIdx - bIdx;
+                });
+                return sortedWorkspaces;
             }
 
             Rectangle {
+                id: workspaceItem
                 property bool isFocused: modelData.is_focused || false
                 property bool isActive: modelData.is_active || false
                 property bool isUrgent: modelData.is_urgent || false
@@ -88,35 +90,18 @@ Rectangle {
                 height: 24
                 radius: 6
 
-                border.width: 2
-                border.color: {
-                    if (isFocused) return "#003c3c"
-                    if (isActive) return "#003c3c"
-                    if (isUrgent) return '#3c0000'
-                    if (hasWindows) return "#001a1a"
-                    return "#000000"
-                }
-
-                // Subtle gradient effect
-                gradient: Gradient {
-                    GradientStop {
-                        position: 0.0
-                        color: Qt.lighter(parent.color, 1.1)
-                    }
-                    GradientStop {
-                        position: 1.0
-                        color: Qt.darker(parent.color, 1.1)
-                    }
-                }
+                color: (isFocused || isActive) ? "#003c3c" : isUrgent ? "#3c0000" : hasWindows ? "#001a1a" : "transparent"
 
                 Text {
                     id: workspaceText
                     anchors.centerIn: parent
                     text: modelData.name || modelData.idx || "?"
                     color: {
-                        if (parent.isFocused) return "#FFFFFF"
-                        if (parent.isUrgent) return "#FFFFFF"
-                        return "#808080"
+                        if (parent.isFocused)
+                            return "#FFFFFF";
+                        if (parent.isUrgent)
+                            return "#FFFFFF";
+                        return "#808080";
                     }
                     font.pixelSize: 12
                     font.bold: parent.isFocused || parent.isUrgent
@@ -128,7 +113,7 @@ Rectangle {
                     width: 6
                     height: 6
                     radius: 3
-                    color: "#ff6b6b"
+                    color: "#3c0000"
                     anchors.top: parent.top
                     anchors.right: parent.right
                     anchors.topMargin: 2
@@ -138,10 +123,10 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
-                    
+
                     onEntered: parent.opacity = 0.8
                     onExited: parent.opacity = 1.0
-                    
+
                     onClicked: {
                         // Switch to workspace using niri action
                         var workspaceId = modelData.idx || modelData.id;
@@ -151,21 +136,13 @@ Rectangle {
                     }
                 }
 
-                // Smooth transitions
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 150
-                        easing.type: Easing.OutCubic
-                    }
-                }
-
                 Behavior on color {
                     ColorAnimation {
-                        duration: 200
+                        duration: 2000
                         easing.type: Easing.OutCubic
                     }
                 }
             }
         }
     }
-} 
+}
