@@ -16,8 +16,8 @@ Scope {
         right: true
       }
 
-      height: 64
-      color: "black"
+      height: 42
+      color: "transparent"
 
       NiriWorkspaces {
         id: workspaces

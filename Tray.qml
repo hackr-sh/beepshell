@@ -4,7 +4,7 @@ import Quickshell.Widgets
 import QtQuick
 
 Row {
-  height: 64
+  height: 32
   spacing: 8
   anchors.right: parent.right
   anchors.verticalCenter: parent.verticalCenter
@@ -15,7 +15,7 @@ Row {
 
     Rectangle {
       width: 32
-      height: 64
+      height: 32
       color: "transparent"
       radius: 4
       anchors.verticalCenter: parent.verticalCenter
@@ -48,7 +48,7 @@ Row {
       // Hover effect
       Rectangle {
         anchors.fill: parent
-        color: parent.hovered ? '#ff281b3a' : "transparent"
+        color: parent.hovered ? '#003c3c' : "transparent"
         radius: parent.radius
         
         Behavior on color {
