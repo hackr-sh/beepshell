@@ -4,19 +4,23 @@ import Quickshell.Widgets
 import QtQuick
 
 Row {
-  height: 32
-  spacing: 8
+  height: parent.height
+  spacing: 6
   anchors.verticalCenter: parent.verticalCenter
-  anchors.rightMargin: 16
 
   Repeater {
     model: SystemTray.items
 
     Rectangle {
+      id: trayItem
+      property bool hovered: false
       width: 32
-      height: 32
-      color: "transparent"
-      radius: 4
+      height: parent.height
+      gradient: Gradient {
+        GradientStop { position: 0.0; color: trayItem.hovered ? '#003c3c' : "#00003c3c" }
+        GradientStop { position: 1.0; color: trayItem.hovered ? '#00003c3c' : "#00000000" }
+      }
+
       anchors.verticalCenter: parent.verticalCenter
       
       // Monitor menu changes
@@ -43,19 +47,16 @@ Row {
         anchor.edges: Qt.BottomEdge | Qt.RightEdge
         anchor.gravity: Qt.LeftEdge | Qt.BottomEdge
       }
-      
-      // Hover effect
-      Rectangle {
-        anchors.fill: parent
-        color: parent.hovered ? '#003c3c' : "#00003c3c"
-        radius: parent.radius
-        
-        Behavior on color {
-          ColorAnimation { duration: 150 }
-        }
-      }
 
-      property bool hovered: false
+      Rectangle {
+        width: parent.width
+        height: 4
+        gradient: Gradient {
+          GradientStop { position: 0.0; color: trayItem.hovered ? "#FFFFFF" : "#00000000" }
+          GradientStop { position: 1.0; color: trayItem.hovered ? "#00FFFFFF" : "#00000000" }
+        }
+        anchors.top: parent.top
+      }
 
       IconImage {
         id: trayIcon
