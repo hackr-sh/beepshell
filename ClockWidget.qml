@@ -2,11 +2,23 @@ import QtQuick
 import "./Time.qml"
 
 Rectangle {
-  color: "#44000000"
   anchors.centerIn: parent
   width: childrenRect.width + 12
-  height: childrenRect.height + 12
-  radius: 6
+  height: parent.height
+  gradient: Gradient {
+    GradientStop { position: 0.0; color: "#44000000" }
+    GradientStop { position: 1.0; color: "#00000000" }
+  }
+
+  Rectangle {
+    width: parent.width
+    height: 4
+    gradient: Gradient {
+      GradientStop { position: 0.0; color: "#FFFFFFFF" }
+      GradientStop { position: 1.0; color: "#00FFFFFF" }
+    }
+    opacity: 0.5
+  }
 
   Row {
     anchors.centerIn: parent
