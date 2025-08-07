@@ -32,10 +32,14 @@ Scope {
         anchors.verticalCenter: parent.verticalCenter
       }
 
-      Tray {
+      Row {
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.verticalCenter: parent.verticalCenter
+        spacing: 8
+        
+        
+        Tray {}
       }
     }
   }

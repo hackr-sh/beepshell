@@ -6,7 +6,6 @@ import QtQuick
 Row {
   height: 32
   spacing: 8
-  anchors.right: parent.right
   anchors.verticalCenter: parent.verticalCenter
   anchors.rightMargin: 16
 
