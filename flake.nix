@@ -21,6 +21,14 @@
             (import ./shell.nix { inherit pkgs; })
           ];
         };
+        
+        # simply package the contents of the root directory
+        packages = {
+          default = pkgs.stdenv.mkDerivation {
+            name = "quickshell";
+            src = ./.;
+          };
+        };
       }
     );
 }
