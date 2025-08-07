@@ -3,44 +3,39 @@ import QtQuick
 
 Scope {
 
-  Variants {
-    model: Quickshell.screens
+    Variants {
+        model: Quickshell.screens
 
-    PanelWindow {
-      property var modelData
-      screen: modelData
+        PanelWindow {
+            property var modelData
+            screen: modelData
 
-      anchors {
-        top: true
-        left: true
-        right: true
-      }
+            anchors {
+                top: true
+                left: true
+                right: true
+            }
 
-      height: 52
-      color: "transparent"
+            implicitHeight: 48
+            color: "transparent"
 
-      NiriWorkspaces {
-        id: workspaces
-        anchors.left: parent.left
-        anchors.leftMargin: 12
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 6
-      }
+            NiriWorkspaces {
+                id: workspaces
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 6
+            }
 
-      ClockWidget {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-      }
+            ClockWidget {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
 
-      Row {
-        anchors.right: parent.right
-        anchors.rightMargin: 12
-        anchors.verticalCenter: parent.verticalCenter
-        spacing: 8
-        
-        
-        Tray {}
-      }
+            Tray {
+                anchors.right: parent.right
+                anchors.rightMargin: 12
+            }
+        }
     }
-  }
 }
