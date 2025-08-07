@@ -3,9 +3,9 @@ import QtQuick
 
 Rectangle {
     id: root
-    color: "#44000000"
+    color: "transparent"
     width: workspaceRow.width
-    height: 34
+    height: parent.height
     radius: 8
 
     property var workspaces: []
@@ -60,7 +60,7 @@ Rectangle {
     Row {
         id: workspaceRow
         spacing: 8
-        padding: 6
+        height: parent.height
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
@@ -80,6 +80,7 @@ Rectangle {
                 return sortedWorkspaces;
             }
 
+
             Rectangle {
                 id: workspaceItem
                 property bool isFocused: modelData.is_focused || false
@@ -88,10 +89,24 @@ Rectangle {
                 property bool hasWindows: modelData.active_window_id !== null
 
                 width: Math.max(32, workspaceText.width + 16)
-                height: 24
-                radius: 6
+                height: parent.height
 
                 color: (isFocused || isActive) ? "#003c3c" : isUrgent ? "#3c0000" : hasWindows ? "#001a1a" : "transparent"
+
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: (workspaceItem.isFocused || workspaceItem.isActive) ? "#003c3c" : workspaceItem.isUrgent ? "#3c0000" : workspaceItem.hasWindows ? "#001a1a" : "transparent" }
+                    GradientStop { position: 1.0; color: (workspaceItem.isFocused || workspaceItem.isActive) ? "#00003c3c" : workspaceItem.isUrgent ? "#003c0000" : workspaceItem.hasWindows ? "#00001a1a" : "transparent" }
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: 4
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: workspaceItem.isFocused || workspaceItem.isActive ? "#FFFFFFFF" : "#00000000" }
+                        GradientStop { position: 1.0; color: workspaceItem.isFocused || workspaceItem.isActive ? "#00FFFFFF" : "#00000000" }
+                    }
+                    opacity: 0.5
+                }
 
                 Text {
                     id: workspaceText
@@ -106,19 +121,6 @@ Rectangle {
                     }
                     font.pixelSize: 12
                     font.bold: parent.isFocused || parent.isUrgent
-                }
-
-                // Urgent indicator
-                Rectangle {
-                    visible: parent.isUrgent
-                    width: 6
-                    height: 6
-                    radius: 3
-                    color: "#3c0000"
-                    anchors.top: parent.top
-                    anchors.right: parent.right
-                    anchors.topMargin: 2
-                    anchors.rightMargin: 2
                 }
 
                 MouseArea {
