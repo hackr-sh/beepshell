@@ -7,6 +7,18 @@ Scope {
         model: Quickshell.screens
 
         PanelWindow {
+            mask: Region {
+                Region {
+                    item: tray
+                }
+                Region {
+                    item: workspaces
+                }
+                Region {
+                    item: clock
+                }
+            }
+
             property var modelData
             screen: modelData
 
@@ -28,11 +40,13 @@ Scope {
             }
 
             ClockWidget {
+                id: clock
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             Tray {
+                id: tray
                 anchors.right: parent.right
                 anchors.rightMargin: 12
             }
