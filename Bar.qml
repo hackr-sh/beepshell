@@ -9,13 +9,13 @@ Scope {
         PanelWindow {
             mask: Region {
                 Region {
-                    item: tray
+                    item: leftWidget
                 }
                 Region {
-                    item: workspaces
+                    item: centerWidget
                 }
                 Region {
-                    item: clock
+                    item: rightRow
                 }
             }
 
@@ -32,7 +32,7 @@ Scope {
             color: "transparent"
 
             NiriWorkspaces {
-                id: workspaces
+                id: leftWidget
                 anchors.left: parent.left
                 anchors.leftMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
@@ -40,15 +40,23 @@ Scope {
             }
 
             ClockWidget {
-                id: clock
+                id: centerWidget
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            Tray {
-                id: tray
+            Row {
+                id: rightRow
                 anchors.right: parent.right
                 anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                width: childrenRect.width
+                height: parent.height
+                spacing: 6
+
+                Tray {
+                    id: tray
+                }
             }
         }
     }
