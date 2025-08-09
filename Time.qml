@@ -29,7 +29,7 @@ Singleton {
         ", " + year
 
     Timer {
-        interval: 1000
+        interval: 250
         running: true
         repeat: true
         onTriggered: date = new Date()
