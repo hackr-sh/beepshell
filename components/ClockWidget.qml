@@ -1,5 +1,5 @@
 import QtQuick
-import "./Time.qml"
+import "../services"
 
 Rectangle {
   anchors.centerIn: parent

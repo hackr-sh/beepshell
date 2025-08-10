@@ -2,7 +2,7 @@
 
 import Quickshell
 import QtQuick
-import "./Bar.qml"
+import "./components"
 
 ShellRoot {
   Bar {}
