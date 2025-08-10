@@ -3,12 +3,19 @@ import "./Time.qml"
 
 Rectangle {
   anchors.centerIn: parent
-  width: childrenRect.width
   height: parent.height
-  gradient: Gradient {
-    GradientStop { position: 0.0; color: "#44000000" }
-    GradientStop { position: 1.0; color: "#00000000" }
+  color: "transparent"
+
+  Rectangle {
+    width: clockRow.width + 50
+    anchors.horizontalCenter: parent.horizontalCenter
+    height: parent.height
+    gradient: Gradient {
+      GradientStop { position: 0.0; color: "#44000000" }
+      GradientStop { position: 1.0; color: "#00000000" }
+    }
   }
+    
 
   Rectangle {
     width: clockRow.width + 50
