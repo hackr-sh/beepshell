@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import Quickshell.Io
 import QtQuick
 
@@ -82,6 +84,7 @@ Rectangle {
 
             Rectangle {
                 id: workspaceItem
+                required property var modelData
                 property bool isFocused: modelData.is_focused || false
                 property bool isActive: modelData.is_active || false
                 property bool isUrgent: modelData.is_urgent || false
@@ -178,7 +181,7 @@ Rectangle {
                 Text {
                     id: workspaceText
                     anchors.centerIn: parent
-                    text: modelData.name || modelData.idx || "?"
+                    text: workspaceItem.modelData.name || workspaceItem.modelData.idx || "?"
                     color: {
                         if (parent.isFocused)
                             return "#FFFFFF";
@@ -196,7 +199,7 @@ Rectangle {
 
                     onClicked: {
                         // Switch to workspace using niri action
-                        var workspaceId = modelData.idx || modelData.id;
+                        var workspaceId = workspaceItem.modelData.idx || workspaceItem.modelData.id;
                         if (workspaceId !== undefined) {
                             root.switchToWorkspace(workspaceId);
                         }
