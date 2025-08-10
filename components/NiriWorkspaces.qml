@@ -80,32 +80,99 @@ Rectangle {
                 return sortedWorkspaces;
             }
 
-
             Rectangle {
                 id: workspaceItem
                 property bool isFocused: modelData.is_focused || false
                 property bool isActive: modelData.is_active || false
                 property bool isUrgent: modelData.is_urgent || false
                 property bool hasWindows: modelData.active_window_id !== null
+                property bool isHovered: false
 
                 width: Math.max(32, workspaceText.width + 16)
                 height: parent.height
+                color: "transparent"
 
-                color: (isFocused || isActive) ? "#003c3c" : isUrgent ? "#3c0000" : hasWindows ? "#001a1a" : "transparent"
-
-                gradient: Gradient {
-                    GradientStop { position: 0.0; color: (workspaceItem.isFocused || workspaceItem.isActive) ? "#003c3c" : workspaceItem.isUrgent ? "#3c0000" : workspaceItem.hasWindows ? "#001a1a" : "transparent" }
-                    GradientStop { position: 1.0; color: (workspaceItem.isFocused || workspaceItem.isActive) ? "#00003c3c" : workspaceItem.isUrgent ? "#003c0000" : workspaceItem.hasWindows ? "#00001a1a" : "transparent" }
+                Rectangle {
+                    anchors.fill: parent
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0.0
+                            color: "#001a1a"
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: "#00001a1a"
+                        }
+                    }
+                    opacity: workspaceItem.hasWindows && !workspaceItem.isFocused && !workspaceItem.isActive ? 1.0 : 0.0
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 150
+                        }
+                    }
                 }
+
+                Rectangle {
+                    anchors.fill: parent
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0.0
+                            color: "#3c0000"
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: "#003c0000"
+                        }
+                    }
+                    opacity: workspaceItem.isUrgent && !workspaceItem.isFocused && !workspaceItem.isActive ? 1.0 : 0.0
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 150
+                        }
+                    }
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    gradient: Gradient {
+                        GradientStop {
+                            position: 0.0
+                            color: "#003c3c"
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: "#00003c3c"
+                        }
+                    }
+                    opacity: workspaceItem.isFocused || workspaceItem.isActive ? 1.0 : 0.0
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 150
+                        }
+                    }
+                }
+                
+
 
                 Rectangle {
                     width: parent.width
                     height: 4
                     gradient: Gradient {
-                        GradientStop { position: 0.0; color: workspaceItem.isFocused || workspaceItem.isActive ? "#FFFFFFFF" : "#00000000" }
-                        GradientStop { position: 1.0; color: workspaceItem.isFocused || workspaceItem.isActive ? "#00FFFFFF" : "#00000000" }
+                        GradientStop {
+                            position: 0.0
+                            color: (workspaceItem.isActive || workspaceItem.isFocused || workspaceItem.isHovered) ? "#FFFFFFFF" : "#00000000"
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: (workspaceItem.isActive || workspaceItem.isFocused || workspaceItem.isHovered) ? "#00FFFFFF" : "#00000000"
+                        }
                     }
-                    opacity: 0.5
+                    opacity: workspaceItem.isHovered ? 1.0 : 0.5
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 150
+                        }
+                    }
                 }
 
                 Text {
@@ -127,9 +194,6 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
 
-                    onEntered: parent.opacity = 0.8
-                    onExited: parent.opacity = 1.0
-
                     onClicked: {
                         // Switch to workspace using niri action
                         var workspaceId = modelData.idx || modelData.id;
@@ -137,6 +201,8 @@ Rectangle {
                             root.switchToWorkspace(workspaceId);
                         }
                     }
+                    onEntered: parent.isHovered = true
+                    onExited: parent.isHovered = false
                 }
 
                 Behavior on color {
