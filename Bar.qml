@@ -57,6 +57,10 @@ Scope {
                 Tray {
                     id: tray
                 }
+
+                VolumeControlButton {
+                    id: volumeControlButton
+                }
             }
         }
     }
