@@ -37,6 +37,12 @@ Rectangle {
         }
     }
 
+    Process {
+        id: launchPavucontrolProcess
+        command: ["pavucontrol"]
+        running: false
+    }
+
     IconImage {
         anchors.centerIn: parent
         width: 20
@@ -49,6 +55,13 @@ Rectangle {
           } else {
             return Quickshell.iconPath(Quickshell.shellDir + "/icons/vol-0.svg")
           }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onDoubleClicked: {
+            launchPavucontrolProcess.running = true;
         }
     }
 }
