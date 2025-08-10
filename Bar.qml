@@ -58,8 +58,24 @@ Scope {
                     id: tray
                 }
 
-                VolumeControlButton {
-                    id: volumeControlButton
+                Rectangle {
+                    width: childrenRect.width
+                    height: parent.height
+                    color: "transparent"
+
+                    Row {
+                        width: childrenRect.width
+                        height: parent.height
+                        anchors.centerIn: parent
+                        spacing: 0
+                        VolumeControlButton {
+                            id: volumeControlButton
+                        }
+
+                        PowerButton {
+                            id: powerButton
+                        }
+                    }
                 }
             }
         }
