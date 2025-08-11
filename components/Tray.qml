@@ -1,14 +1,30 @@
+pragma ComponentBehavior: Bound
+
 import Quickshell.Services.SystemTray
 import Quickshell
 import Quickshell.Widgets
 import QtQuick
 
 Repeater {
+    id: trayRepeater
     model: SystemTray.items
+    required property var parentWindow
+    required property var rightPanel
+
+    function closeOtherMenus() {
+        console.log("Closing other menus");
+        for (let i = 0; i < trayRepeater.count; i++) {
+            let item = trayRepeater.itemAt(i);
+            if (item.modelData.hasMenu && item.modelData.menu) {
+                item.menuOpener.visible = false;
+            }
+        }
+    }
 
     Rectangle {
         id: trayItem
         required property var modelData
+        property var menuOpener: menuOpener
         property bool hovered: false
         width: 32
         height: parent.height
@@ -27,12 +43,13 @@ Repeater {
 
         // Monitor menu changes
         Component.onCompleted: {
-            if (modelData.hasMenu && modelData.menu) {
+            if (trayItem.modelData.hasMenu && trayItem.modelData.menu) {
                 // Connect to menu change signals if available
                 try {
-                    if (modelData.menu.menuChanged) {
-                        modelData.menu.menuChanged.connect(function () {
-                            console.log("Menu changed for", modelData.title || modelData.tooltipTitle || "unnamed");
+                    if (trayItem.modelData.menu.menuChanged) {
+                        trayItem.modelData.menu.menuChanged.connect(function () {
+                            console.log("Menu changed for", trayItem.modelData.title || trayItem.modelData.tooltipTitle || "unnamed");
+                            console.log("Menu:", trayItem.modelData.menu);
                         });
                     }
                 } catch (e) {
@@ -41,15 +58,116 @@ Repeater {
             }
         }
 
-        // QsMenuAnchor for context menu
-        QsMenuAnchor {
-            id: menuAnchor
+        QsMenuOpener {
+            id: menuOpener
             menu: trayItem.modelData.hasMenu ? trayItem.modelData.menu : null
-            anchor.item: mouseArea
-            anchor.edges: Qt.BottomEdge | Qt.RightEdge
-            anchor.gravity: Qt.LeftEdge | Qt.BottomEdge
+            property var visible: false
         }
-
+        PopupWindow {
+            id: menuOpenerWindow
+            anchor.window: trayRepeater.parentWindow
+            anchor.rect.x: trayRepeater.rightPanel.x + trayItem.x
+            anchor.rect.y: trayRepeater.parentWindow.height - trayItem.y
+            implicitWidth: menuOpenerRepeater.implicitWidth
+            implicitHeight: {
+                let height = 0;
+                for (let i = 0; i < menuOpenerRepeater.count; i++) {
+                    let item = menuOpenerRepeater.itemAt(i);
+                    if (item.modelData.isSeparator) {
+                        height += 1;
+                    } else {
+                        height += 30;
+                    }
+                }
+                console.log("Menu opener height:", height);
+                return height;
+            }
+            visible: menuOpener.visible
+            color: "transparent"
+            Rectangle {
+                anchors.fill: parent
+                color: "#FF000000"
+                radius: 12
+                Column {
+                    id: menuOpenerRow
+                    height: menuOpenerRepeater.count * 30
+                    width: parent.width
+                    padding: 0
+                    spacing: 0
+                    Repeater {
+                        id: menuOpenerRepeater
+                        model: menuOpener.children
+                        implicitWidth: {
+                            let maxWidth = 0;
+                            for (let i = 0; i < menuOpenerRepeater.count; i++) {
+                                let item = menuOpenerRepeater.itemAt(i);
+                                if (item.textWidth > maxWidth) {
+                                    maxWidth = item.textWidth;
+                                }
+                            }
+                            return maxWidth;
+                        }
+                        Rectangle {
+                            id: menuOpenerItem
+                            required property var modelData
+                            property bool hovered: false
+                            property int textWidth: menuOpenerItemText.paintedWidth + 16
+                            enabled: modelData.text || modelData.isSeparator === true
+                            color: "transparent"
+                            height: menuOpenerItem.modelData.isSeparator ? 1 : 30
+                            width: menuOpenerRepeater.implicitWidth
+                            Text {
+                                id: menuOpenerItemText
+                                enabled: menuOpenerItem.modelData.text && !menuOpenerItem.modelData.isSeparator
+                                anchors.verticalCenter: parent.verticalCenter
+                                text: menuOpenerItem.modelData.text
+                                color: menuOpenerItem.modelData.enabled ? "white" : "#808080"
+                                x: 8
+                                font.pixelSize: 12
+                                font.bold: true
+                                z: 1
+                            }
+                            Rectangle {
+                                enabled: menuOpenerItem.modelData.isSeparator && !menuOpenerItem.modelData.text
+                                width: parent.width
+                                height: menuOpenerItem.modelData.isSeparator ? 1 : 0
+                                color: "#212121"
+                                anchors.centerIn: parent
+                            }
+                            Rectangle {
+                                anchors.fill: parent
+                                color: (menuOpenerItem.modelData.enabled && !menuOpenerItem.modelData.isSeparator) ? "#003c3c" : "#00000000"
+                                anchors.centerIn: parent
+                                opacity: menuOpenerItem.hovered ? 0.5 : 0.0
+                                radius: 12
+                                Behavior on opacity {
+                                    NumberAnimation {
+                                        duration: 100
+                                    }
+                                }
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onEntered: {
+                                    console.log("Entered", menuOpenerItem.modelData.text);
+                                    menuOpenerItem.hovered = true;
+                                }
+                                onExited: {
+                                    console.log("Exited", menuOpenerItem.modelData.text);
+                                    menuOpenerItem.hovered = false;
+                                }
+                                onClicked: {
+                                    menuOpenerItem.modelData.triggered();
+                                    menuOpener.visible = false;
+                                }
+                                z: 1000
+                            }
+                        }
+                    }
+                }
+            }
+        }
         Rectangle {
             width: parent.width
             height: 4
@@ -72,52 +190,12 @@ Repeater {
             width: 20
             height: 20
 
-            // Only log debug info if this is the first time we see this item
             source: {
-                if (!trayItem.modelData._debugLogged) {
-                    trayItem.modelData._debugLogged = true;
-
-                    // Debug logging to see what we're getting - including ALL properties
-                    console.log("=== Tray item debug for:", trayItem.modelData.title, "===");
-                    console.log("iconName:", trayItem.modelData.iconName);
-                    console.log("iconPixmap length:", trayItem.modelData.iconPixmap ? trayItem.modelData.iconPixmap.length : "null");
-                    console.log("icon:", trayItem.modelData.icon);
-                    console.log("tooltip:", trayItem.modelData.tooltip);
-                    console.log("status:", trayItem.modelData.status);
-                    console.log("category:", trayItem.modelData.category);
-
-                    // Look for menu/activation properties
-                    console.log("--- Activation properties ---");
-                    console.log("activate:", typeof trayItem.modelData.activate);
-                    console.log("activateSecondary:", typeof trayItem.modelData.activateSecondary);
-                    console.log("menu:", typeof trayItem.modelData.menu);
-                    console.log("contextMenu:", typeof trayItem.modelData.contextMenu);
-                    console.log("menuOpen:", typeof trayItem.modelData.menuOpen);
-                    console.log("showMenu:", typeof trayItem.modelData.showMenu);
-                    console.log("openMenu:", typeof trayItem.modelData.openMenu);
-                    console.log("popup:", typeof trayItem.modelData.popup);
-                    console.log("popupMenu:", typeof trayItem.modelData.popupMenu);
-
-                    // Log all available properties
-                    console.log("--- All properties ---");
-                    for (let prop in trayItem.modelData) {
-                        try {
-                            console.log(prop + ":", typeof trayItem.modelData[prop], trayItem.modelData[prop]);
-                        } catch (e) {
-                            console.log(prop + ": (error accessing)", e.toString());
-                        }
-                    }
-                    console.log("=== End debug ===");
-                }
-
-                // First try iconPixmap if available (most reliable)
                 if (trayItem.modelData.iconPixmap && trayItem.modelData.iconPixmap.length > 0) {
                     return "data:image/png;base64," + trayItem.modelData.iconPixmap;
                 }
 
-                // Handle icon property
                 if (trayItem.modelData.icon && trayItem.modelData.icon.length > 0) {
-                    // Handle qspixmap URLs (these should work directly)
                     if (trayItem.modelData.icon.startsWith("image://qspixmap/")) {
                         return trayItem.modelData.icon;
                     }
@@ -235,10 +313,15 @@ Repeater {
                     // Context menu activation using QsMenuOpener
                     console.log("Right click - trying to open context menu");
 
-                    if (trayItem.modelData.hasMenu && trayItem.modelData.menu && menuAnchor) {
-                        console.log("Opening context menu via QsMenuAnchor");
+                    if (trayItem.modelData.hasMenu && trayItem.modelData.menu && menuOpener) {
+                        console.log("Opening context menu via QsMenuOpener");
                         try {
-                            menuAnchor.open();
+                            if (menuOpener.visible) {
+                                trayRepeater.closeOtherMenus();
+                            } else {
+                                trayRepeater.closeOtherMenus();
+                                menuOpener.visible = true;
+                            }
                         } catch (e) {
                             console.log("Error opening menu:", e.toString());
                             if (trayItem.modelData.secondaryActivate) {
@@ -266,11 +349,14 @@ Repeater {
                 }
             }
 
-            onDoubleClicked: {
+            onDoubleClicked: mouse => {
                 // Double click activation
-                if (trayItem.modelData.activate) {
+                if (trayItem.modelData.activate && mouse.button === Qt.LeftButton) {
                     console.log("Double click - calling activate()");
                     trayItem.modelData.activate();
+                }
+                if (mouse.button === Qt.RightButton) {
+                    menuOpener.visible = !menuOpener.visible;
                 }
             }
         }

@@ -7,6 +7,7 @@ Scope {
         model: Quickshell.screens
 
         PanelWindow {
+            id: topBarPanelWindow
             mask: Region {
                 Region {
                     item: leftWidget
@@ -56,6 +57,8 @@ Scope {
 
                 Tray {
                     id: tray
+                    parentWindow: topBarPanelWindow
+                    rightPanel: rightRow
                 }
 
                 Rectangle {
