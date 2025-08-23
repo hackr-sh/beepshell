@@ -1,4 +1,4 @@
 {
   "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
-  "qt-qml.qmlls.customExePath": "./symlinks/qmlls"
+  "qt-qml.qmlls.customExePath": "/home/hackr/.config/quickshell/symlinks/qmlls"
 }
